@@ -11,7 +11,7 @@ const startup = async () => {
 
   if (!username || !password) {
     console.error("Please provide a username and password via environment variables.");
-    Deno.exit(1);
+    process.exit(1);
   }
 
   console.log(`logging in as ${username}...`)
@@ -25,8 +25,17 @@ const startup = async () => {
 
   bot.on("reply", async (reply) => {
     await reply.like();
-    await reply.reply({ text: "Thanks for saying hi 👋🏻" });
+    await reply.reply({ text: "Hey there 👋🏻. I'm an automated bot; you can reach out to me via DM for more info." });
   })
+
+  bot.on('message', async (message) => {
+    console.log('message recieved:', message.text);
+
+    if (message.text === 'hi') {
+      await message.reply({ text: 'Hey! I can DM you!' });
+    }
+  });
+
 }
 
 await startup();
