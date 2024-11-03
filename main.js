@@ -16,11 +16,12 @@ const startup = async () => {
 
   console.log(`logging in as ${username}...`)
 
-  await bot.setChatPreference(IncomingChatPreference.Following);
   await bot.login({
     identifier: username,
     password
   })
+  await bot.setChatPreference(IncomingChatPreference.Following);
+
 
   console.log('logged in!')
 
