@@ -25,13 +25,12 @@ const startup = async () => {
 
   console.log('logged in!')
 
+  // just like responses; we only work over dm for now.
   bot.on("reply", async (reply) => {
     await reply.like();
-    await reply.reply({ text: "Hey there 👋🏻. I'm an automated bot; you can reach out to me via DM for more info." });
   })
 
-  bot.on('')
-
+  // log incoming messages to the console and respond to the message
   bot.on('message', async (message) => {
     const sender = await message.getSender();
     console.log(`Received message from ${sender.handle}: ${message.text}`);
