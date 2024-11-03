@@ -1,9 +1,9 @@
-import { Bot } from "@skyware/bot";
+import { Bot, IncomingChatPreference } from "@skyware/bot";
 import dotenv from 'dotenv';
 
 const startup = async () => {
   dotenv.config();
-  const bot = new Bot();
+  const bot = new Bot({ emitChatEvents: true });
   const username = process.env.USERNAME;
   const password = process.env.PASSWORD;
 
@@ -16,6 +16,7 @@ const startup = async () => {
 
   console.log(`logging in as ${username}...`)
 
+  await bot.setChatPreference(IncomingChatPreference.Following);
   await bot.login({
     identifier: username,
     password
@@ -28,14 +29,18 @@ const startup = async () => {
     await reply.reply({ text: "Hey there 👋🏻. I'm an automated bot; you can reach out to me via DM for more info." });
   })
 
+  bot.on('')
+
   bot.on('message', async (message) => {
-    console.log('message recieved:', message.text);
+    const sender = await message.getSender();
+    console.log(`Received message from ${sender.handle}: ${message.text}`);
 
-    if (message.text === 'hi') {
-      await message.reply({ text: 'Hey! I can DM you!' });
+    const conversation = await message.getConversation();
+    if (conversation) {
+      // conversations may not always work
+      await conversation.sendMessage({ text: `Hey ${sender.displayName}! I can't do anything yet. But I'm learning!` });
     }
-  });
-
+  })
 }
 
 await startup();
