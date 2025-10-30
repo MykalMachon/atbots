@@ -1,26 +1,24 @@
-import { Bot, IncomingChatPreference } from "@skyware/bot";
-import dotenv from 'dotenv';
+import { Bot, IncomingChatPreference } from "npm:@skyware/bot";
 
 /**
  * rolls a dice and returns the result
  * 
  * @param {number} sides: The number of sides on the dice 
  */
-const rollDice = (sides = 6) => {
+const rollDice = (sides: number = 6) => {
   return Math.floor(Math.random() * sides) + 1;
 }
 
 const startup = async () => {
-  dotenv.config();
   const bot = new Bot({ emitChatEvents: true });
-  const username = process.env.USERNAME;
-  const password = process.env.PASSWORD;
+  const username = Deno.env.get("USERNAME");
+  const password = Deno.env.get("PASSWORD");
 
   console.log('starting up...')
 
   if (!username || !password) {
     console.error("Please provide a username and password via environment variables.");
-    process.exit(1);
+    Deno.exit(1);
   }
 
   console.log(`logging in as ${username}...`)
@@ -29,9 +27,8 @@ const startup = async () => {
     identifier: username,
     password
   })
+
   await bot.setChatPreference(IncomingChatPreference.Following);
-
-
   console.log('logged in!')
 
   // just like responses; we only work over dm for now.
@@ -62,4 +59,7 @@ const startup = async () => {
   })
 }
 
-await startup();
+// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
+if (import.meta.main) {
+  startup();
+}
